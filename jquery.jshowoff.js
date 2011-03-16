@@ -41,17 +41,20 @@ speed :				time each slide is shown [integer, milliseconds, defaults to 3000]
 			effect : 'fade',
 			hoverPause : true,
 			links : true,
-			speed : 3000
+			speed : 3000,
+			afterChange : $.noop
 		};
 		
 		// merge default global variables with custom variables, modifying 'config'
-		if (settings) $.extend(true, config, settings);
+		if (settings) {
+			$.extend(true, config, settings);
+		}
 
 		// make sure speed is at least 20ms longer than changeSpeed
 		if (config.speed < (config.changeSpeed+20)) {
 			alert('jShowOff: Make speed at least 20ms longer than changeSpeed; the fades aren\'t always right on time.');
 			return this;
-		};
+		}
 		
 		// create slideshow for each matching element invoked by .jshowoff()
 		this.each(function(i) {
@@ -64,7 +67,7 @@ speed :				time each slide is shown [integer, milliseconds, defaults to 3000]
 			var preloadedImg = [];
 			var howManyInstances = $('.jshowoff').length+1;
 			var uniqueClass = 'jshowoff-'+howManyInstances;
-			var cssClass = config.cssClass != undefined ? config.cssClass : '';
+			var cssClass = config.cssClass !== undefined ? config.cssClass : '';
 			
 			
 			// set up wrapper
@@ -81,7 +84,7 @@ speed :				time each slide is shown [integer, milliseconds, defaults to 3000]
 			// add controls
 			if(config.controls){
 				addControls();
-				if(config.autoPlay==false){
+				if(config.autoPlay === false){
 					$('.'+uniqueClass+'-play').addClass(uniqueClass+'-paused jshowoff-paused').text(config.controlText.play);
 				};
 			};
@@ -123,24 +126,25 @@ speed :				time each slide is shown [integer, milliseconds, defaults to 3000]
 					function slideDir(dir) {
 						newSlideDir = dir=='right' ? 'left' : 'right';
 						oldSlideDir = dir=='left' ? 'left' : 'right';					
-					};
+					}
 					
 
 					counter >= oldCounter ? slideDir('left') : slideDir('right') ;
 
 					$(gallery[counter]).clone().appendTo($cont).slideIt({direction:newSlideDir,changeSpeed:config.changeSpeed});
 					if($cont.children().length>1){
-						$cont.children().eq(0).css('position','absolute').slideIt({direction:oldSlideDir,showHide:'hide',changeSpeed:config.changeSpeed},function(){$(this).remove();});
+						$cont.children().eq(0).css('position','absolute').slideIt({direction:oldSlideDir,showHide:'hide',changeSpeed:config.changeSpeed},function(){$(this).remove();config.afterChange()});
 					};
 				} else if (config.effect=='fade') {
 					$(gallery[counter]).clone().appendTo($cont).hide().fadeIn(config.changeSpeed,function(){if($.browser.msie)this.style.removeAttribute('filter');});
 					if($cont.children().length>1){
-						$cont.children().eq(0).css('position','absolute').fadeOut(config.changeSpeed,function(){$(this).remove();});
+						$cont.children().eq(0).css('position','absolute').fadeOut(config.changeSpeed,function(){$(this).remove();config.afterChange();});
 					};
 				} else if (config.effect=='none') {
 					$(gallery[counter]).clone().appendTo($cont);
 					if($cont.children().length>1){
 						$cont.children().eq(0).css('position','absolute').remove();
+						config.afterChange();
 					};
 				};
 				
