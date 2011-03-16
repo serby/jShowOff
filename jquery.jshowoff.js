@@ -18,6 +18,7 @@ effect :			transition effect [string: 'fade', 'slideLeft' or 'none', defaults to
 hoverPause :		whether to pause on hover [boolean, defaults to true]
 links :				whether to create & display numeric links to each slide [boolean, defaults to true]
 speed :				time each slide is shown [integer, milliseconds, defaults to 3000]
+afterChange :			called after a slide has changed [function, function() {}]	
 
 */
 
