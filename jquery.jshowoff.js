@@ -134,18 +134,18 @@ afterChange :			called after a slide has changed [function, function() {}]
 
 					$(gallery[counter]).clone().appendTo($cont).slideIt({direction:newSlideDir,changeSpeed:config.changeSpeed});
 					if($cont.children().length>1){
-						$cont.children().eq(0).css('position','absolute').slideIt({direction:oldSlideDir,showHide:'hide',changeSpeed:config.changeSpeed},function(){$(this).remove();config.afterChange()});
+						$cont.children().eq(0).css('position','absolute').slideIt({direction:oldSlideDir,showHide:'hide',changeSpeed:config.changeSpeed},function(){$(this).remove();config.afterChange(counter)});
 					};
 				} else if (config.effect=='fade') {
 					$(gallery[counter]).clone().appendTo($cont).hide().fadeIn(config.changeSpeed,function(){if($.browser.msie)this.style.removeAttribute('filter');});
 					if($cont.children().length>1){
-						$cont.children().eq(0).css('position','absolute').fadeOut(config.changeSpeed,function(){$(this).remove();config.afterChange();});
+						$cont.children().eq(0).css('position','absolute').fadeOut(config.changeSpeed,function(){$(this).remove();config.afterChange(counter);});
 					};
 				} else if (config.effect=='none') {
 					$(gallery[counter]).clone().appendTo($cont);
 					if($cont.children().length>1){
 						$cont.children().eq(0).css('position','absolute').remove();
-						config.afterChange();
+						config.afterChange(counter);
 					};
 				};
 				
